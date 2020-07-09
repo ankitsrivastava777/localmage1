@@ -47,7 +47,6 @@ $catObj = $block->getCategoryAttribute($id);
         }
     } else {
         $catObj->setData('is_active', 1);
-        echo $catObj->getData('is_active');
         $catObj->save();
     }
 }

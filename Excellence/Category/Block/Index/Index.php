@@ -5,7 +5,6 @@ namespace Excellence\Category\Block\Index;
 
 class Index extends \Magento\Framework\View\Element\Template
 {
-
         /**
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
@@ -30,7 +29,6 @@ class Index extends \Magento\Framework\View\Element\Template
     ) {
         parent::__construct($context, $data);
         $this->_categoryFactory = $collecionFactory;
-
     }
 
     public function getWebsites() {
