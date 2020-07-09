@@ -30,6 +30,8 @@ class Payment extends \Magento\Payment\Model\Method\Cc
     protected $_minAmount = null;
     protected $_maxAmount = null;
     protected $_supportedCurrencyCodes = array('USD');
+    protected $_logger;
+
 
     protected $_debugReplacePrivateDataKeys = ['number', 'exp_month', 'exp_year', 'cvc'];
 
@@ -44,6 +46,7 @@ class Payment extends \Magento\Payment\Model\Method\Cc
         \Magento\Framework\Module\ModuleListInterface $moduleList,
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate,
         \Magento\Directory\Model\CountryFactory $countryFactory,
+        \Inchoo\Stripe\Logger\Logger $loggerr,
         \Stripe\Stripe $stripe,
         array $data = array()
     ) {
@@ -63,6 +66,7 @@ class Payment extends \Magento\Payment\Model\Method\Cc
         );
 
         $this->_countryFactory = $countryFactory;
+        $this->_logger = $loggerr;
 
         $this->_stripeApi = $stripe;
         $this->_stripeApi->setApiKey(
@@ -120,6 +124,7 @@ class Payment extends \Magento\Payment\Model\Method\Cc
 
         } catch (\Exception $e) {
             $this->debugData(['request' => $requestData, 'exception' => $e->getMessage()]);
+            $this->_logger->info($e->getMessage());
             $this->_logger->error(__('Payment capturing error.'));
             throw new \Magento\Framework\Validator\Exception(__('Payment capturing error.'));
         }
