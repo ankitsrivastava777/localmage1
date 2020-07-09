@@ -1,0 +1,53 @@
+<?php
+
+$websites = $block->getWebsites();
+$websiteid = $block->getCurrentWebsiteId();
+?>
+<?php if (count($block->getWebsites()) > 1) : ?>
+    <div class="switcher website switcher-website" id="switcher-website">
+        <strong class="label switcher-label"><span><?php echo __('Select Website') ?></span></strong>
+        <div class="actions dropdown options switcher-options">
+            <?php foreach ($websites as $website) : ?>
+                <?php if ($websiteid == $website->getId()) : ?>
+                    <div class="action toggle switcher-trigger" role="button" tabindex="0" data-mage-init='{"dropdown":{}}' data-toggle="dropdown" data-trigger-keypress-button="true" id="switcher-website-trigger">
+                        <strong>
+                            <span><?php echo $block->escapeHtml($website->getName()) ?></span>
+                        </strong>
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            <ul class="dropdown switcher-dropdown" data-target="dropdown">
+                <?php foreach ($websites as $website) : ?>
+                    <?php if (!($websiteid == $website->getId())) : ?>
+                        <li class="switcher-option">
+                            <a href='<?php echo $website->getDefaultStore()->getCurrentUrl() ?>'>
+                                <?php echo $block->escapeHtml($website->getName()) ?>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+<?php endif; ?>
+<?php
+
+$categories = $block->getCategoryCollection(); 
+
+foreach ($categories as $category) {
+    $id = $category->getId();
+$catObj = $block->getCategoryAttribute($id);
+
+    $catData = $catObj->getData();
+    if ($catObj->getData('is_featured') == "0") {
+        if ($websiteid != "1") {
+
+            $catObj->setData('is_active', 0);
+            $catObj->save();
+        }
+    } else {
+        $catObj->setData('is_active', 1);
+        echo $catObj->getData('is_active');
+        $catObj->save();
+    }
+}
