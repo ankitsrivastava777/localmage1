@@ -1,4 +1,7 @@
 <?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$session = $objectManager->get('Magento\Customer\Model\Session');
+$customerId = $session->getCustomer()->getId();
 
 $websites = $block->getWebsites();
 $websiteid = $block->getCurrentWebsiteId();
@@ -20,9 +23,29 @@ $websiteid = $block->getCurrentWebsiteId();
                 <?php foreach ($websites as $website) : ?>
                     <?php if (!($websiteid == $website->getId())) : ?>
                         <li class="switcher-option">
-                            <a href='<?php echo $website->getDefaultStore()->getCurrentUrl() ?>'>
-                                <?php echo $block->escapeHtml($website->getName()) ?>
-                            </a>
+                            <?php
+                            if ($session->getCustomer()->getId() > 0) {
+                                $customerId = $session->getCustomer()->getId();
+                                $customerEmail = $session->getCustomer()->getEmail();
+                                $customerRepository = $objectManager
+                                    ->get('Magento\Customer\Api\CustomerRepositoryInterface');
+                                $customer = $customerRepository->getById($customerId);
+                                $cattrValue = $customer->getCustomAttribute('accesswebsite')->getValue();
+                                if ($cattrValue == '1') { ?>
+                                    <a href='<?php echo $website->getDefaultStore()->getCurrentUrl() ?>'>
+                                        <?php echo $block->escapeHtml($website->getName()) ?>
+                                    </a>
+                                <?php } else { ?>
+                                    <a href='<?= $this->getUrl("access-denied"); ?>' />
+                                    <?php echo $block->escapeHtml($website->getName()) ?>
+                                    </a>
+                                <?php }
+                            } else {
+                                ?>
+                                <a href='<?php echo $website->getDefaultStore()->getCurrentUrl() ?>'>
+                                    <?php echo $block->escapeHtml($website->getName()) ?>
+                                </a>
+                            <?php } ?>
                         </li>
                     <?php endif; ?>
                 <?php endforeach; ?>
@@ -32,11 +55,11 @@ $websiteid = $block->getCurrentWebsiteId();
 <?php endif; ?>
 <?php
 
-$categories = $block->getCategoryCollection(); 
+$categories = $block->getCategoryCollection();
 
 foreach ($categories as $category) {
     $id = $category->getId();
-$catObj = $block->getCategoryAttribute($id);
+    $catObj = $block->getCategoryAttribute($id);
 
     $catData = $catObj->getData();
     if ($catObj->getData('is_featured') == "0") {
@@ -50,3 +73,19 @@ $catObj = $block->getCategoryAttribute($id);
         $catObj->save();
     }
 }
+
+if ($websiteid != "1" && !$customerId) {
+?>
+    <script type="text/javascript">
+        require(['jquery', 'jquery/ui'], function($) {
+            jQuery(document).ready(function() {
+                $('a').bind("click.myDisable", function() {
+                    window.location.href = '<?= $this->getUrl("customer/account/login"); ?>';
+                    return false;
+                });
+            });
+        });
+    </script>
+<?php
+}
+?>
