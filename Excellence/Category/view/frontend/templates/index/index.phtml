@@ -73,19 +73,3 @@ foreach ($categories as $category) {
         $catObj->save();
     }
 }
-
-if ($websiteid != "1" && !$customerId) {
-?>
-    <script type="text/javascript">
-        require(['jquery', 'jquery/ui'], function($) {
-            jQuery(document).ready(function() {
-                $('a').bind("click.myDisable", function() {
-                    window.location.href = '<?= $this->getUrl("customer/account/login"); ?>';
-                    return false;
-                });
-            });
-        });
-    </script>
-<?php
-}
-?>
