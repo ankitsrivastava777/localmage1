@@ -2,7 +2,6 @@
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 $session = $objectManager->get('Magento\Customer\Model\Session');
 $customerId = $session->getCustomer()->getId();
-
 $websites = $block->getWebsites();
 $websiteid = $block->getCurrentWebsiteId();
 ?>

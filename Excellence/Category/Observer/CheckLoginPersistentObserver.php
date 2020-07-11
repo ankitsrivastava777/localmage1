@@ -55,11 +55,8 @@ class CheckLoginPersistentObserver implements ObserverInterface
             $customer = $this->customerRepositoryInterface->getById($customerId);
             $customerAttr = $customer->getCustomAttribute('accesswebsite')->getValue();
             $currentUrl = $this->_urlInterface->getCurrentUrl() . "/";
-            /**
-             * Check if user logged in
-             */
-            if ($this->customerSession->isLoggedIn() && $customerAttr == "0") {
 
+            if ($this->customerSession->isLoggedIn() && $customerAttr == "0") {
                 if ($currentUrl != $this->url->getUrl('access-denied')) {
                     $this->http->setRedirect($this->url->getUrl('access-denied'), 301);
                 }
@@ -67,12 +64,7 @@ class CheckLoginPersistentObserver implements ObserverInterface
         }
         if (!$customerId) {
             $currentUrl = $this->_urlInterface->getCurrentUrl();
-            /**
-             * Check if user logged in
-             */
-
             if (!$this->customerSession->isLoggedIn()) {
-
                 if ($currentUrl != $this->url->getUrl('customer/account/login')) {
                     $this->http->setRedirect($this->url->getUrl('customer/account/login'), 301);
                 }
