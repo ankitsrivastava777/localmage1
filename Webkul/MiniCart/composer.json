@@ -1,0 +1,22 @@
+{
+    "name": "webkul/module-minicart",
+    "description": "",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Mage2Gen",
+            "email": "info@mage2gen.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Webkul\\MiniCart\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
+    }
+}
